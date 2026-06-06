@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/sshetye/Documents/Satyajit%20Shetye/Project%20Core/ai-practice/typenotes/app/page.tsx"],"sourcesContent":["export default function Home() {\n  return (\n    <main className=\"flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4 text-center text-white\">\n      <h1 className=\"text-5xl font-bold tracking-tight\">Welcome to the Codex Course</h1>\n      <p className=\"mt-4 max-w-lg text-lg text-gray-400\">\n        Learn how to build modern apps with OpenAI Codex. This demo project will guide you through\n        the essentials step by step.\n      </p>\n    </main>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAK,WAAU;;0BACd,8OAAC;gBAAG,WAAU;0BAAoC;;;;;;0BAClD,8OAAC;gBAAE,WAAU;0BAAsC;;;;;;;;;;;;AAMzD"}}]
-}
