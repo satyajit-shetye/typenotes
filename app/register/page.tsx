@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { PageIntro, PlaceholderPanel } from "@/app/_components/scaffold";
+import { AuthForm } from "@/app/_components/auth-form";
+import { PageIntro } from "@/app/_components/scaffold";
 
 export const metadata: Metadata = {
   title: "Register",
@@ -11,14 +12,10 @@ export default function RegisterPage() {
       <PageIntro
         eyebrow="Create an account"
         title="Start your TinyNotes space"
-        description="Registration controls will be added in a later implementation phase."
+        description="Choose an email and password for your account."
       />
       <div className="mt-8">
-        <PlaceholderPanel
-          label="Registration form placeholder"
-          description="Future name, email, password, validation, and submit controls."
-          tall
-        />
+        <AuthForm mode="register" />
       </div>
     </main>
   );

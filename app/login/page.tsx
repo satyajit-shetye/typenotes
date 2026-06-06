@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { PageIntro, PlaceholderPanel } from "@/app/_components/scaffold";
+import { AuthForm } from "@/app/_components/auth-form";
+import { PageIntro } from "@/app/_components/scaffold";
 
 export const metadata: Metadata = {
   title: "Log in",
@@ -11,14 +12,10 @@ export default function LoginPage() {
       <PageIntro
         eyebrow="Welcome back"
         title="Log in to TinyNotes"
-        description="Authentication controls will be added in a later implementation phase."
+        description="Enter your email and password to continue."
       />
       <div className="mt-8">
-        <PlaceholderPanel
-          label="Login form placeholder"
-          description="Future email, password, validation, and submit controls."
-          tall
-        />
+        <AuthForm mode="login" />
       </div>
     </main>
   );
