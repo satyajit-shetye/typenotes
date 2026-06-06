@@ -1,11 +1,23 @@
-export default function Home() {
+import { PageIntro, PlaceholderPanel } from "@/app/_components/scaffold";
+
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4 text-center text-white">
-      <h1 className="text-5xl font-bold tracking-tight">Welcome to the Codex Course</h1>
-      <p className="mt-4 max-w-lg text-lg text-gray-400">
-        Learn how to build modern apps with OpenAI Codex. This demo project will guide you through
-        the essentials step by step.
-      </p>
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-6 py-16 sm:px-10">
+      <PageIntro
+        eyebrow="TinyNotes"
+        title="A quiet place for thoughtful notes."
+        description="This landing page is a static placeholder. Authentication-aware routing will be added later."
+      />
+      <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <PlaceholderPanel
+          label="Returning users"
+          description="Future sign-in entry point."
+        />
+        <PlaceholderPanel
+          label="New users"
+          description="Future registration entry point."
+        />
+      </div>
     </main>
   );
 }
