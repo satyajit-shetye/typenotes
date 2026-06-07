@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getCurrentSession } from "@/lib/session";
+import { getTheme, THEME_COOKIE_NAME } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,9 +19,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getCurrentSession();
+  const cookieStore = await cookies();
+  const theme = session ? getTheme(cookieStore.get(THEME_COOKIE_NAME)?.value) : "light";
 
   return (
-    <html lang="en">
+    <html data-theme={theme} lang="en">
       <body className="antialiased">
         {!session && (
           <header className="border-b border-border bg-surface/80 backdrop-blur">
@@ -35,7 +39,7 @@ export default async function RootLayout({
                   Log in
                 </Link>
                 <Link
-                  className="rounded-full bg-acqua-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-acqua-600"
+                  className="rounded-full bg-acqua-800 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-acqua-600"
                   href="/register"
                 >
                   Register

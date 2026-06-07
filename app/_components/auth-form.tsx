@@ -149,7 +149,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
 
         <button
-          className="mt-7 w-full rounded-xl bg-acqua-800 px-4 py-3 text-sm font-semibold text-white transition hover:bg-acqua-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acqua-800 disabled:cursor-wait disabled:opacity-60"
+          className="mt-7 w-full rounded-xl bg-acqua-800 px-4 py-3 text-sm font-semibold text-on-accent transition hover:bg-acqua-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acqua-800 disabled:cursor-wait disabled:opacity-60"
           disabled={isPending}
           type="submit"
         >

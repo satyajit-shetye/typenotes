@@ -65,7 +65,7 @@ export default async function NotesPage() {
               <p className="mt-4 text-sm leading-6 text-muted">{summarizeNote(note.contentJson)}</p>
               <div className="mt-4 flex items-center gap-3">
                 <Link
-                  className="rounded-xl bg-acqua-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-acqua-600"
+                  className="rounded-xl bg-acqua-800 px-4 py-2 text-sm font-semibold text-on-accent transition hover:bg-acqua-600"
                   href={`/notes/${note.id}`}
                 >
                   Edit note
@@ -87,7 +87,7 @@ export default async function NotesPage() {
             Create your first note to start saving thoughts in TinyNotes.
           </p>
           <Link
-            className="mt-5 inline-flex rounded-xl bg-acqua-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-acqua-600"
+            className="mt-5 inline-flex rounded-xl bg-acqua-800 px-4 py-2 text-sm font-semibold text-on-accent transition hover:bg-acqua-600"
             href="/notes/new"
           >
             New note

@@ -67,6 +67,31 @@ test("protects the notes editor route for anonymous visitors", async ({ page }) 
   await expect(page).toHaveURL("/login");
 });
 
+test("lets logged-in users select and retain a theme", async ({ page }, testInfo) => {
+  const email = uniqueEmail(testInfo);
+
+  await register(page, email);
+
+  const themeSelector = page
+    .getByRole("navigation", { name: "Workspace navigation" })
+    .getByLabel("Theme");
+
+  await expect(themeSelector).toHaveValue("light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+
+  await themeSelector.selectOption("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+  await page.reload();
+  await expect(themeSelector).toHaveValue("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+  await page.getByRole("button", { name: "Log out" }).click();
+  await expect(page).toHaveURL("/login");
+  await expect(page.getByLabel("Theme")).toHaveCount(0);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+});
+
 test("registers, creates, reopens, and updates a note", async ({ page }, testInfo) => {
   const email = uniqueEmail(testInfo);
   const initialTitle = `E2E note ${Date.now()}`;
