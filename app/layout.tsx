@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LogoutButton } from "@/app/_components/logout-button";
+import { getCurrentSession } from "@/lib/session";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,11 +12,13 @@ export const metadata: Metadata = {
   description: "A quiet place for thoughtful notes.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getCurrentSession();
+
   return (
     <html lang="en">
       <body className="antialiased">
@@ -24,18 +28,24 @@ export default function RootLayout({
               TinyNotes
             </Link>
             <nav aria-label="Account navigation" className="flex items-center gap-5">
-              <Link
-                className="text-sm font-medium text-acqua-800 transition-colors hover:text-acqua-600"
-                href="/login"
-              >
-                Log in
-              </Link>
-              <Link
-                className="rounded-full bg-acqua-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-acqua-600"
-                href="/register"
-              >
-                Register
-              </Link>
+              {session ? (
+                <LogoutButton />
+              ) : (
+                <>
+                  <Link
+                    className="text-sm font-medium text-acqua-800 transition-colors hover:text-acqua-600"
+                    href="/login"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    className="rounded-full bg-acqua-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-acqua-600"
+                    href="/register"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         </header>

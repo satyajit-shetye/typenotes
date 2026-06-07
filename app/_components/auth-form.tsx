@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { authClient } from "@/lib/auth-client";
 
 type AuthFormProps = {
   mode: "login" | "register";
@@ -15,20 +17,24 @@ type FormErrors = {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function AuthForm({ mode }: AuthFormProps) {
+  const router = useRouter();
   const isRegister = mode === "register";
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
   function clearFieldError(field: keyof FormErrors) {
     setErrors((currentErrors) => ({ ...currentErrors, [field]: undefined }));
     setStatus("");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "").trim();
+    const email = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
     const password = String(formData.get("password") ?? "");
     const nextErrors: FormErrors = {};
 
@@ -45,11 +51,42 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
 
     setErrors(nextErrors);
-    setStatus(
-      Object.keys(nextErrors).length === 0
-        ? "Your details are valid. Authentication is not connected yet."
-        : "",
-    );
+    setStatus("");
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    setIsPending(true);
+
+    try {
+      const result = isRegister
+        ? await authClient.signUp.email({
+            email,
+            name: email.split("@")[0] || "TinyNotes user",
+            password,
+          })
+        : await authClient.signIn.email({
+            email,
+            password,
+          });
+
+      if (result.error) {
+        setStatus(
+          isRegister
+            ? "Unable to create your account. Check your details and try again."
+            : "Email or password is incorrect.",
+        );
+        setIsPending(false);
+        return;
+      }
+
+      router.push("/notes");
+      router.refresh();
+    } catch {
+      setStatus("Authentication is temporarily unavailable. Try again.");
+      setIsPending(false);
+    }
   }
 
   const inputClassName =
@@ -75,6 +112,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             placeholder="you@example.com"
             required
             type="email"
+            disabled={isPending}
           />
           {errors.email ? (
             <p className="mt-2 text-sm text-red-700" id={`${mode}-email-error`}>
@@ -99,6 +137,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             placeholder={isRegister ? "At least 8 characters" : "Enter your password"}
             required
             type="password"
+            disabled={isPending}
           />
           {errors.password ? (
             <p className="mt-2 text-sm text-red-700" id={`${mode}-password-error`}>
@@ -110,16 +149,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
 
         <button
-          className="mt-7 w-full rounded-xl bg-acqua-800 px-4 py-3 text-sm font-semibold text-white transition hover:bg-acqua-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acqua-800"
+          className="mt-7 w-full rounded-xl bg-acqua-800 px-4 py-3 text-sm font-semibold text-white transition hover:bg-acqua-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acqua-800 disabled:cursor-wait disabled:opacity-60"
+          disabled={isPending}
           type="submit"
         >
-          {isRegister ? "Create account" : "Log in"}
+          {isPending ? "Please wait..." : isRegister ? "Create account" : "Log in"}
         </button>
 
         {status ? (
           <p
-            className="mt-4 rounded-xl border border-acqua-300 bg-acqua-100 px-4 py-3 text-sm text-acqua-800"
-            role="status"
+            className="mt-4 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
           >
             {status}
           </p>

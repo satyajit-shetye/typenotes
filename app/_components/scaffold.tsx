@@ -13,9 +13,7 @@ type PlaceholderPanelProps = {
 export function PageIntro({ eyebrow, title, description }: PageIntroProps) {
   return (
     <header className="max-w-3xl">
-      <p className="text-xs font-semibold tracking-[0.22em] text-acqua-600 uppercase">
-        {eyebrow}
-      </p>
+      <p className="text-xs font-semibold tracking-[0.22em] text-acqua-600 uppercase">{eyebrow}</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
         {title}
       </h1>
