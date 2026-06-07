@@ -22,6 +22,16 @@
 * Custom **404 page**.
 * Styling: “elegant acqua colors”.
 
+### Verification
+
+* After every code change, run formatting, linting, TypeScript checking, unit tests, and E2E tests:
+  * `bun run format`
+  * `bun run lint`
+  * `bun run tsc --noEmit`
+  * `bun run test`
+  * `bun run test:e2e`
+* Run `bun run build` before opening a pull request.
+
 ---
 
 ## 1) Architecture overview

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/app/_components/scaffold";
-import { extractTipTapText, listNotes } from "@/lib/notes";
+import { listNotes } from "@/lib/notes";
+import { extractTipTapText } from "@/lib/note-text";
 import { requireSession } from "@/lib/session";
 
 export const metadata: Metadata = {
