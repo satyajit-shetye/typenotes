@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { PageIntro, PlaceholderPanel } from "@/app/_components/scaffold";
+import { PageIntro } from "@/app/_components/scaffold";
+import { createNoteAction } from "@/app/notes/actions";
+import { NoteForm } from "@/app/notes/new/new-note-form";
 
 export const metadata: Metadata = {
   title: "New note",
@@ -11,18 +13,10 @@ export default function NewNotePage() {
       <PageIntro
         eyebrow="New note"
         title="Capture a thought"
-        description="The note editor and creation behavior will be added later."
+        description="Write a title, compose the note, and save it to your workspace."
       />
-      <div className="mt-10 grid gap-5">
-        <PlaceholderPanel
-          label="Note title placeholder"
-          description="Future editable note title."
-        />
-        <PlaceholderPanel
-          label="Rich-text editor placeholder"
-          description="Future TipTap toolbar, editing surface, and save-status area."
-          tall
-        />
+      <div className="mt-10">
+        <NoteForm action={createNoteAction} submitLabel="Save note" />
       </div>
     </main>
   );
