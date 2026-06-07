@@ -440,14 +440,21 @@ Suggested `code` values:
 
 ### Folder layout
 
-* `migrations/0001_init.sql`, `0002_notes.sql`, etc.
+* Paired files such as `migrations/0001_init.up.sql` and `0001_init.down.sql`.
 * `scripts/migrate.ts`:
 
   * Ensures `schema_migrations` exists.
-  * Reads migration files sorted by filename.
-  * Applies each within a transaction.
-  * Records applied version (filename) with timestamp.
+  * Validates every version has an up/down pair.
+  * Reads migration pairs sorted by version.
+  * Applies pending up migrations within individual transactions.
+  * Rolls back the latest applied migration within a transaction.
+  * Records applied logical version with timestamp.
   * On failure: rollback and exit non-zero.
+
+### Commands
+
+* `bun run db:migrate` applies all pending migrations.
+* `bun run db:migrate:down` rolls back the latest applied migration.
 
 ### Migration content
 
