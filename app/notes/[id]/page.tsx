@@ -13,8 +13,8 @@ export default function NotePage() {
         title="View and edit note"
         description="Note loading, editing, autosave, deletion, and sharing behavior will be added later."
       />
-      <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="grid gap-5">
+      <div className="mt-10 grid gap-5 lg:grid-cols-12">
+        <div className="grid gap-5 lg:col-span-8">
           <PlaceholderPanel
             label="Note title placeholder"
             description="Future editable note title and save status."
@@ -25,7 +25,7 @@ export default function NotePage() {
             tall
           />
         </div>
-        <div className="grid content-start gap-5">
+        <div className="grid gap-5 lg:col-span-4 lg:content-start">
           <PlaceholderPanel
             label="Share controls placeholder"
             description="Future share-link enable, copy, and disable controls."
