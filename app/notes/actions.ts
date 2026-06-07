@@ -3,7 +3,13 @@
 import { createDocument, getSchema, type JSONContent } from "@tiptap/core";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createNote, updateNote } from "@/lib/notes";
+import {
+  createNote,
+  deleteNote,
+  disableNoteSharing,
+  enableNoteSharing,
+  updateNote,
+} from "@/lib/notes";
 import { requireSession } from "@/lib/session";
 import { createNoteExtensions } from "@/lib/tiptap";
 
@@ -51,6 +57,12 @@ function validateContentJson(contentJson: string): string | null {
   }
 
   return null;
+}
+
+function safeReturnTo(value: FormDataEntryValue | null): string {
+  const returnTo = String(value ?? "/notes");
+
+  return returnTo.startsWith("/notes") ? returnTo : "/notes";
 }
 
 export async function createNoteAction(
@@ -112,4 +124,45 @@ export async function updateNoteAction(
   revalidatePath("/notes");
   revalidatePath(`/notes/${id}`);
   redirect("/notes");
+}
+
+export async function deleteNoteAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  const id = String(formData.get("id") ?? "");
+
+  if (id) {
+    deleteNote(session.user.id, id);
+    revalidatePath("/notes");
+  }
+
+  redirect("/notes");
+}
+
+export async function enableNoteSharingAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  const id = String(formData.get("id") ?? "");
+  const returnTo = safeReturnTo(formData.get("returnTo"));
+
+  if (!id) {
+    redirect(returnTo);
+  }
+
+  enableNoteSharing(session.user.id, id);
+  revalidatePath("/notes");
+  revalidatePath(`/notes/${id}`);
+  redirect(returnTo);
+}
+
+export async function disableNoteSharingAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  const id = String(formData.get("id") ?? "");
+  const returnTo = safeReturnTo(formData.get("returnTo"));
+
+  if (id) {
+    disableNoteSharing(session.user.id, id);
+    revalidatePath("/notes");
+    revalidatePath(`/notes/${id}`);
+  }
+
+  redirect(returnTo);
 }

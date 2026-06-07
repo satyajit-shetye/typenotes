@@ -6,6 +6,9 @@ vi.mock("@/lib/session", () => ({
 
 vi.mock("@/lib/notes", () => ({
   createNote: vi.fn(),
+  deleteNote: vi.fn(),
+  disableNoteSharing: vi.fn(),
+  enableNoteSharing: vi.fn(),
   updateNote: vi.fn(),
 }));
 
@@ -19,10 +22,22 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-import { createNoteAction, updateNoteAction } from "@/app/notes/actions";
+import {
+  createNoteAction,
+  deleteNoteAction,
+  disableNoteSharingAction,
+  enableNoteSharingAction,
+  updateNoteAction,
+} from "@/app/notes/actions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createNote, updateNote } from "@/lib/notes";
+import {
+  createNote,
+  deleteNote,
+  disableNoteSharing,
+  enableNoteSharing,
+  updateNote,
+} from "@/lib/notes";
 import { extractTipTapText } from "@/lib/note-text";
 import { requireSession } from "@/lib/session";
 
@@ -250,6 +265,44 @@ describe("updateNoteAction", () => {
     });
     expect(revalidatePath).toHaveBeenCalledWith("/notes");
     expect(revalidatePath).toHaveBeenCalledWith("/notes/note_1");
+    expect(redirect).toHaveBeenCalledWith("/notes");
+  });
+});
+
+describe("note management actions", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireSession).mockResolvedValue(testSession);
+  });
+
+  it("deletes only the signed-in user's note", async () => {
+    const formData = new FormData();
+    formData.set("id", "note_1");
+
+    await expect(deleteNoteAction(formData)).rejects.toThrow("REDIRECT");
+    expect(deleteNote).toHaveBeenCalledWith("user_1", "note_1");
+    expect(revalidatePath).toHaveBeenCalledWith("/notes");
+    expect(redirect).toHaveBeenCalledWith("/notes");
+  });
+
+  it("enables sharing and returns to the note", async () => {
+    const formData = new FormData();
+    formData.set("id", "note_1");
+    formData.set("returnTo", "/notes/note_1");
+    vi.mocked(enableNoteSharing).mockReturnValue("public_token");
+
+    await expect(enableNoteSharingAction(formData)).rejects.toThrow("REDIRECT");
+    expect(enableNoteSharing).toHaveBeenCalledWith("user_1", "note_1");
+    expect(redirect).toHaveBeenCalledWith("/notes/note_1");
+  });
+
+  it("disables sharing and returns to the requested notes page", async () => {
+    const formData = new FormData();
+    formData.set("id", "note_1");
+    formData.set("returnTo", "/notes");
+
+    await expect(disableNoteSharingAction(formData)).rejects.toThrow("REDIRECT");
+    expect(disableNoteSharing).toHaveBeenCalledWith("user_1", "note_1");
     expect(redirect).toHaveBeenCalledWith("/notes");
   });
 });
