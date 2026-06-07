@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/app/_components/scaffold";
+import { NoteActions } from "@/app/notes/note-actions";
 import { listNotes } from "@/lib/notes";
 import { extractTipTapText } from "@/lib/note-text";
 import { requireSession } from "@/lib/session";
@@ -67,8 +68,14 @@ export default async function NotesPage() {
                   className="rounded-xl bg-acqua-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-acqua-600"
                   href={`/notes/${note.id}`}
                 >
-                  View note
+                  Edit note
                 </Link>
+                <NoteActions
+                  noteId={note.id}
+                  returnTo="/notes"
+                  shareEnabled={note.shareEnabled}
+                  shareToken={note.shareToken}
+                />
               </div>
             </article>
           ))}
